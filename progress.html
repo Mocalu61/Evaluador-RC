@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Secretaría Académica - Progreso</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .progress-card {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .course-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .score-box {
+            background: #0f172a;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .score-box h3 {
+            font-size: 3.5rem;
+            color: var(--accent);
+        }
+
+        .module-list {
+            list-style: none;
+        }
+
+        .module-grade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .module-grade-item:last-child {
+            border-bottom: none;
+        }
+
+        .module-info h5 {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .module-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .grade-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .academic-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <header class="portal-header">
+            <div class="brand">
+                <i data-lucide="graduation-cap" class="brand-icon"></i>
+                <div class="brand-text">
+                    <h1>Secretaría Académica Virtual</h1>
+                    <span>Consolidado de Calificaciones y Logros</span>
+                </div>
+            </div>
+        </header>
+
+        <a href="index.html" class="back-link"><i data-lucide="arrow-left"></i> Volver al Portal de Evaluación</a>
+
+        <main class="progress-card">
+            <div class="course-summary">
+                <div class="score-box">
+                    <p class="score-label">Promedio General</p>
+                    <h3 id="final-avg">-.-</h3>
+                    <p id="qualitative-final" style="margin-top:10px; font-weight:700">Calculando...</p>
+                </div>
+                <div class="summary-text">
+                    <h2>Estado del Estudiante</h2>
+                    <p id="summary-desc" style="margin-top:1rem; color: var(--text-muted); line-height:1.6">
+                        Para recibir los certificados, debes completar los 5 productos auténticos del curso.
+                    </p>
+                    <div class="academic-actions" id="cert-buttons" class="hidden">
+                        <!-- Buttons injected here -->
+                    </div>
+                    <div id="demo-area"
+                        style="margin-top:20px; border:1px dashed var(--accent); padding:1rem; border-radius:10px; text-align:center">
+                        <p style="font-size:0.8rem; color:var(--accent); margin-bottom:10px">MODO DEMO: Prueba el
+                            sistema sin esperar semanas</p>
+                        <button class="primary-btn"
+                            style="background:var(--accent); color:white; border:none; padding:10px; cursor:pointer"
+                            onclick="simulateExcellence()">Simular Curso Completo (Excelencia: 9.2)</button>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="border-color: var(--border); margin: 2rem 0">
+
+            <h3>Desglose por Módulo</h3>
+            <div class="module-list" id="grade-list">
+                <!-- Data injected here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const grades = JSON.parse(localStorage.getItem('rc_grades') || '{}');
+        const listEl = document.getElementById('grade-list');
+        const avgEl = document.getElementById('final-avg');
+        const qualEl = document.getElementById('qualitative-final');
+        const descEl = document.getElementById('summary-desc');
+        const btnArea = document.getElementById('cert-buttons');
+
+        function init() {
+            const keys = Object.keys(grades);
+            if (keys.length === 0) {
+                listEl.innerHTML = '<p style="padding: 2rem; text-align:center; color: var(--text-muted)">Aún no has entregado ningún producto para calificar.</p>';
+                return;
+            }
+
+            let total = 0;
+            listEl.innerHTML = '';
+
+            for (let i = 1; i <= 5; i++) {
+                const g = grades[i];
+                if (g) {
+                    total += parseFloat(g.score);
+                    listEl.innerHTML += `
+                        <div class="module-grade-item">
+                            <div class="module-info">
+                                <h5>Módulo ${i}: ${g.title}</h5>
+                                <p><strong>RA:</strong> ${g.lo}</p>
+                                <p><strong>Desempeño Qual:</strong> ${g.qualitative}</p>
+                            </div>
+                            <div class="grade-value">${g.score}</div>
+                        </div>
+                    `;
+                } else {
+                    listEl.innerHTML += `
+                        <div class="module-grade-item" style="opacity: 0.4">
+                            <div class="module-info">
+                                <h5>Módulo ${i}: Pendiente</h5>
+                                <p>Sin entrega registrada.</p>
+                            </div>
+                            <div class="grade-value">---</div>
+                        </div>
+                    `;
+                }
+            }
+
+            const avg = total / keys.length;
+            avgEl.textContent = avg.toFixed(1);
+
+            if (keys.length === 5) {
+                qualEl.textContent = avg >= 8 ? "EXCELENCIA ACADÉMICA" : "CURSO COMPLETADO";
+                qualEl.style.color = avg >= 8 ? 'var(--accent)' : 'var(--warning)';
+                descEl.textContent = avg >= 8
+                    ? "¡Felicidades! Has demostrado una competencia excepcional en la gestión del Registro Calificado bajo el Decreto 529. Tienes derecho a tu Certificado de Aprobación de Élite."
+                    : "Has cumplido con todos los requisitos del curso. Tu constancia de participación ya está disponible.";
+
+                btnArea.innerHTML = `
+                    <button class="primary-btn" onclick="location.href='certificate.html?type=${avg >= 8 ? 'aprobacion' : 'participacion'}'">
+                        <i data-lucide="award"></i> Descargar ${avg >= 8 ? 'Certificado de Aprobación' : 'Constancia de Participación'}
+                    </button>
+                    ${avg < 8 ? '<p style="font-size:0.7rem; color:var(--text-muted); margin-top:10px">Nota: No alcanzaste el 80% (8.0) para el certificado de aprobación.</p>' : ''}
+                `;
+            } else {
+                qualEl.textContent = "EN PROCESO";
+                descEl.textContent = `Has completado ${keys.length} de 5 módulos. Sigue trabajando para desbloquear tu certificación.`;
+            }
+
+            lucide.createIcons();
+        }
+
+        function simulateExcellence() {
+            const demoGrades = {
+                "1": { score: "9.5", qualitative: "Excelencia Técnica", lo: "Diferencia trámites normativos", title: "Análisis Normativo D529", status: "Aprobado" },
+                "2": { score: "8.8", qualitative: "Logro Competente", lo: "Estructura RAPs con coherencia", title: "Matriz RAPs", status: "Aprobado" },
+                "3": { score: "9.2", qualitative: "Excelencia Técnica", lo: "Diseña modelos SIAC", title: "Mapa SIAC", status: "Aprobado" },
+                "4": { score: "9.0", qualitative: "Excelencia Técnica", lo: "Sustenta modalidades híbridas", title: "Justificación Créditos", status: "Aprobado" },
+                "5": { score: "9.5", qualitative: "Excelencia Técnica", lo: "Consolida paquetes maestros", title: "Paquete SACES", status: "Aprobado" }
+            };
+            localStorage.setItem('rc_grades', JSON.stringify(demoGrades));
+            alert("¡Curso simulado con éxito! Recargando para mostrar resultados...");
+            location.reload();
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

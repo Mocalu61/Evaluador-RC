@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evaluación Auténtica IA - Registro Calificado</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="portal-container">
+        <header class="portal-header">
+            <div class="brand">
+                <i data-lucide="shield-check" class="brand-icon"></i>
+                <div class="brand-text">
+                    <h1>Portal de Evaluación Auténtica IA</h1>
+                    <span>Retroalimentación experta basada en Decretos 1330 y 529</span>
+                </div>
+            </div>
+            <div class="header-badges">
+                <span class="badge">D529 Enabled</span>
+                <span class="badge">Real AI Feedback</span>
+            </div>
+        </header>
+
+        <main class="portal-main">
+            <section class="submission-panel">
+                <div class="panel-header">
+                    <h2>Entrega de Evidencia</h2>
+                    <p>Sube tu diagrama, matriz o justificación para recibir una evaluación técnica inmediata del "Par
+                        Académico Virtual".</p>
+                </div>
+
+                <div class="module-selector">
+                    <label>Selecciona el Módulo correspondiente:</label>
+                    <select id="module-select">
+                        <option value="1">Módulo 1: Ruta Crítica y Diagrama de Flujo</option>
+                        <option value="2">Módulo 2: Matriz de Alineación de RAPs</option>
+                        <option value="3">Módulo 3: Mapa de Sistematización SIAC</option>
+                        <option value="4">Módulo 4: Justificación de Modalidad y Créditos</option>
+                        <option value="5">Módulo 5: Paquete Maestro de Radicación</option>
+                    </select>
+                </div>
+
+                <div class="input-card">
+                    <label>Tu Trabajo (Redacción o Texto del Diagrama):</label>
+                    <textarea id="work-input"
+                        placeholder="Pega aquí el contenido técnico para ser analizado por la IA..."></textarea>
+
+                    <div class="file-drop-zone" id="drop-zone">
+                        <i data-lucide="upload-cloud"></i>
+                        <p>Arrastra imágenes de tus diagramas aquí (Opcional)</p>
+                        <input type="file" id="file-input" hidden>
+                    </div>
+
+                    <button class="analyze-btn" onclick="startAIAnalysis()">
+                        <i data-lucide="cpu"></i> Iniciar Análisis de Calidad IA
+                    </button>
+                </div>
+            </section>
+
+            <section class="feedback-panel">
+                <div id="feedback-placeholder">
+                    <div class="empty-state">
+                        <i data-lucide="activity" class="placeholder-icon"></i>
+                        <h3>Listo para Evaluar</h3>
+                        <p>Cuando envíes tu trabajo, aquí aparecerá la retroalimentación real basada en las rúbricas
+                            oficiales del Ministerio.</p>
+                    </div>
+                </div>
+
+                <div id="feedback-results" class="hidden">
+                    <!-- Results injected here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- AI Inference Overlay (Visual ONLY) -->
+    <div id="ai-overlay" class="hidden">
+        <div class="ai-processing-content">
+            <div class="pulse-ring"></div>
+            <i data-lucide="brain-circuit" class="ai-icon"></i>
+            <h3>Procesando con IA...</h3>
+            <p>Conectando con el motor de validación normativa...</p>
+        </div>
+    </div>
+
+    <!-- Google AI SDK pinned version -->
+    <script type="importmap">
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai@0.21.0"
+      }
+    }
+    </script>
+    <script type="module" src="app.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>

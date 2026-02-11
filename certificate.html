@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Certificado - Registro Calificado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #10b981;
+        }
+
+        body {
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .cert-container {
+            background: white;
+            width: 1000px;
+            height: 750px;
+            padding: 4rem;
+            position: relative;
+            border: 15px solid #1e293b;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cert-border {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid #334155;
+        }
+
+        .institution-logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .cert-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 2rem 0;
+            color: #1e293b;
+        }
+
+        .cert-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            font-weight: 300;
+        }
+
+        .recipient-name {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 2rem 0;
+            border-bottom: 2px solid #e2e8f0;
+            display: inline-block;
+            padding: 0 2rem;
+        }
+
+        .cert-description {
+            font-size: 1.1rem;
+            color: #334155;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 3rem;
+        }
+
+        .sig-item {
+            border-top: 1px solid #1e293b;
+            padding-top: 10px;
+            width: 200px;
+        }
+
+        .seal {
+            position: absolute;
+            bottom: 4rem;
+            right: 4rem;
+            width: 120px;
+            height: 120px;
+            border: 3px double var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--primary);
+            transform: rotate(-15deg);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+
+        @media print {
+            .controls {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controls">
+        <button onclick="window.print()"
+            style="padding: 10px 20px; background: #1e293b; color: white; border: none; border-radius: 5px; cursor: pointer;">Imprimir
+            / Guardar PDF</button>
+        <button onclick="window.location.href='progress.html'"
+            style="padding: 10px 20px; background: #64748b; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left:10px">Volver</button>
+    </div>
+
+    <div class="cert-container">
+        <div class="cert-border"></div>
+        <div class="institution-logo">Sistemas de Gestión de Calidad Universitaria</div>
+
+        <div>
+            <p class="cert-subtitle" id="cert-type-label">CERTIFICADO DE APROBACIÓN POR EXCELENCIA</p>
+            <h1 class="cert-title" id="cert-title-main">Especialista en Registro Calificado</h1>
+            <p class="cert-subtitle">Otorga el presente a:</p>
+            <div class="recipient-name">ESTUDIANTE DESTACADO</div>
+            <div class="cert-description" id="cert-body">
+                Por haber completado satisfactoriamente los 5 módulos de formación técnica avanzada, demostrando una
+                calificación superior al 80% y un dominio integral de las flexibilidades del Decreto 529 de 2024 en la
+                formulación de programas de educación superior.
+            </div>
+        </div>
+
+        <div class="signatures">
+            <div class="sig-item">
+                <p>Par Académico Virtual (IA)</p>
+                <strong>Validación Automática</strong>
+            </div>
+            <div class="sig-item">
+                <p>Dirección de Calidad</p>
+                <strong>SimuRC 2026</strong>
+            </div>
+        </div>
+
+        <div class="seal" id="seal-text">D529<br>Garantía de<br>Calidad</div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type') || 'participacion';
+        const grades = JSON.parse(localStorage.getItem('rc_grades') || '{}');
+
+        if (type === 'participacion') {
+            document.getElementById('cert-type-label').textContent = 'CONSTANCIA DE PARTICIPACIÓN ACADÉMICA';
+            document.getElementById('cert-title-main').textContent = 'Gestión del Registro Calificado';
+            document.getElementById('cert-body').textContent = 'Se hace constar que el estudiante participó activamente en los módulos de formación sobre el marco normativo del Registro Calificado y conoció las herramientas de simulación de radicación ante el MEN.';
+            document.getElementById('seal-text').innerHTML = 'Participación<br>Activa<br>2026';
+            document.body.style.setProperty('--primary', '#64748b');
+        }
+    </script>
+</body>
+
+</html>
